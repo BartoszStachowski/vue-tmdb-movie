@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
-import type { Movie } from '@/types/movie';
+import type { Movie, MovieResponse } from '@/types/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -27,7 +27,7 @@ onMounted(async () => {
     throw new Error('Failed to fetch movies');
   }
 
-  const data = await response.json();
+  const data: MovieResponse = await response.json();
   movies.value = data.results;
 });
 
@@ -38,6 +38,10 @@ watch(search, (value: string) => {
   timeout = setTimeout(() => {
     console.log(value);
   }, 1000);
+});
+
+onMounted(() => {
+  if (timeout) clearTimeout(timeout);
 });
 </script>
 
