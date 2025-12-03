@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const model = defineModel();
+</script>
 <template>
   <div
     class="bg-primary-2/40 mx-auto mt-10 px-4 py-3 border border-white rounded-md w-full max-w-3xl"
@@ -13,6 +15,7 @@
         Search throught thousands of movies
       </label>
       <input
+        v-model="model"
         id="search"
         name="search"
         type="text"
