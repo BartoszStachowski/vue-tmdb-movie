@@ -12,6 +12,18 @@
         </h1>
         <BaseSearch />
       </header>
+
+      <!-- ALL MOVIES SECTION -->
+      <section class="space-y-9">
+        <h2>All Movies</h2>
+        <ul
+          class="gap-5 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+        >
+          <li v-for="i in 10" :key="i">
+            <MovieCard />
+          </li>
+        </ul>
+      </section>
     </div>
   </main>
 </template>
