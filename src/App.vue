@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
 import type { Movie, MovieResponse, TrendingRow } from '@/types/movie';
-import BaseSpinner from './components/BaseSpinner.vue';
+import BaseSpinner from '@/components/BaseSpinner.vue';
 import { getTrendingMovies, updateSearchCount } from '@/services/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -69,7 +69,6 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
 const loadTrendingMovies = async () => {
   try {
     trendingMovies.value = await getTrendingMovies();
-    console.log(trendingMovies.value);
   } catch (error) {
     console.error(`Error fetching trending movies: ${error}`);
   }
@@ -87,10 +86,11 @@ watch(search, (value: string) => {
 
   timeout = setTimeout(() => {
     fetchMovies(value);
+    loadTrendingMovies();
   }, 1000);
 });
 
-onMounted(() => {
+onUnmounted(() => {
   if (timeout) clearTimeout(timeout);
 });
 </script>
@@ -107,6 +107,29 @@ onMounted(() => {
         </h1>
         <BaseSearch v-model="search" />
       </header>
+
+      <section class="mt-20">
+        <h2>Trending Movies</h2>
+
+        <ul
+          class="flex flex-row gap-5 -mt-10 w-full overflow-y-auto hide-scrollbar"
+        >
+          <li
+            v-for="(movie, index) in trendingMovies"
+            :key="movie.$id"
+            class="flex flex-row items-center min-w-[230px]"
+          >
+            <p class="mt-5 text-nowrap fancy-text">
+              {{ index + 1 }}
+            </p>
+            <img
+              :src="movie.poster_url"
+              alt="Movie Poster"
+              class="-ml-3.5 rounded-lg w-[127px] h-[163px] object-cover"
+            />
+          </li>
+        </ul>
+      </section>
 
       <!-- ALL MOVIES SECTION -->
       <section class="space-y-9">
