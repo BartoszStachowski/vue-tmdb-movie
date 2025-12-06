@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-  <div role="status">
+  <div [data-test="spinner" ] role="status">
     <svg
       aria-hidden="true"
       class="fill-brand w-8 h-8 text-neutral-tertiary animate-spin"
