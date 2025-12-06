@@ -4,6 +4,7 @@ import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
 import type { Movie, MovieResponse } from '@/types/movie';
+import BaseSpinner from './components/BaseSpinner.vue';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -17,26 +18,55 @@ const API_OPTIONS = {
 };
 
 const search = ref('');
+const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 
-onMounted(async () => {
-  const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
-  const response = await fetch(endpoint, API_OPTIONS);
+const isLoading = ref(false);
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch movies');
+const fetchMovies = async (query: string = ''): Promise<void> => {
+  isLoading.value = true;
+
+  try {
+    const endpoint = query
+      ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
+      : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+
+    const response = await fetch(endpoint, API_OPTIONS);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch movies.');
+    }
+
+    const data: MovieResponse = await response.json();
+
+    if (!data.results || data.results.length === 0) {
+      errorMessage.value = 'No movies found.';
+      movies.value = [];
+      return;
+    }
+
+    movies.value = data.results || [];
+  } catch (error) {
+    if (error instanceof Error) {
+      errorMessage.value = error.message;
+      return;
+    }
+  } finally {
+    isLoading.value = false;
   }
+};
 
-  const data: MovieResponse = await response.json();
-  movies.value = data.results;
+onMounted(async () => {
+  fetchMovies();
 });
 
 let timeout: ReturnType<typeof setTimeout> | null = null;
+
 watch(search, (value: string) => {
   if (timeout) clearTimeout(timeout);
 
   timeout = setTimeout(() => {
-    console.log(value);
+    fetchMovies(value);
   }, 1000);
 });
 
@@ -61,7 +91,11 @@ onMounted(() => {
       <!-- ALL MOVIES SECTION -->
       <section class="space-y-9">
         <h2>All Movies</h2>
+
+        <BaseSpinner v-if="isLoading" />
+        <p v-else-if="errorMessage" class="text-red-500">{{ errorMessage }}</p>
         <ul
+          v-else
           class="gap-5 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <li v-for="movie in movies" :key="movie.id">

@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import type { Movie } from '@/types/movie';
 
-defineProps<{
+const props = defineProps<{
   movie: Movie;
 }>();
+
+const poster = props.movie.poster_path
+  ? `https://image.tmdb.org/t/p/w500/${props.movie.poster_path}`
+  : '/no-poster.png';
 </script>
 <template>
   <div class="bg-primary-1 shadow-inner shadow-primary-2 p-5 rounded-2xl">
     <img
-      :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`"
+      :src="poster"
       :alt="`Poster of ${movie.title}`"
-      class="rounded-lg w-full h-auto"
+      class="rounded-lg w-full h-full"
     />
     <div class="mt-4">
       <h3>{{ movie.title }}</h3>
