@@ -1,3 +1,5 @@
+import type { Models } from 'appwrite';
+
 export interface Movie {
   adult: boolean;
   backdrop_path: string | null;
@@ -20,4 +22,11 @@ export interface MovieResponse {
   results: Movie[];
   total_pages: number;
   total_results: number;
+}
+
+export interface TrendingRow extends Models.Row {
+  search_term: string;
+  count: number;
+  movie_id: number;
+  poster_url: string;
 }

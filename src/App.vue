@@ -3,8 +3,9 @@ import { onMounted, ref, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
-import type { Movie, MovieResponse } from '@/types/movie';
+import type { Movie, MovieResponse, TrendingRow } from '@/types/movie';
 import BaseSpinner from './components/BaseSpinner.vue';
+import { getTrendingMovies, updateSearchCount } from '@/services/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -20,11 +21,13 @@ const API_OPTIONS = {
 const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
+const trendingMovies = ref<TrendingRow[]>([]);
 
 const isLoading = ref(false);
 
 const fetchMovies = async (query: string = ''): Promise<void> => {
   isLoading.value = true;
+  errorMessage.value = '';
 
   try {
     const endpoint = query
@@ -38,14 +41,21 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
 
     const data: MovieResponse = await response.json();
+    const results = data.results ?? [];
 
-    if (!data.results || data.results.length === 0) {
+    if (results.length === 0) {
       errorMessage.value = 'No movies found.';
       movies.value = [];
       return;
     }
 
-    movies.value = data.results || [];
+    movies.value = results;
+
+    const firstMovie = data.results[0];
+
+    if (query && firstMovie) {
+      await updateSearchCount(query, firstMovie);
+    }
   } catch (error) {
     if (error instanceof Error) {
       errorMessage.value = error.message;
@@ -56,8 +66,18 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
   }
 };
 
+const loadTrendingMovies = async () => {
+  try {
+    trendingMovies.value = await getTrendingMovies();
+    console.log(trendingMovies.value);
+  } catch (error) {
+    console.error(`Error fetching trending movies: ${error}`);
+  }
+};
+
 onMounted(async () => {
   fetchMovies();
+  loadTrendingMovies();
 });
 
 let timeout: ReturnType<typeof setTimeout> | null = null;
