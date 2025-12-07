@@ -64,8 +64,6 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
-    await nextTick();
-    // alert(moviesSectionRef.value);
   }
 };
 
@@ -77,9 +75,32 @@ const loadTrendingMovies = async () => {
   }
 };
 
+watch(
+  movies,
+  async (newMovies) => {
+    // jeśli pusta lista – nic nie rób
+    if (!newMovies.length) return;
+
+    // poczekaj, aż DOM się zrenderuje po zmianie `movies`
+    await nextTick();
+
+    const el = moviesSectionRef.value;
+
+    if (!el) {
+      alert('WATCH: ref jest nadal null 😅');
+      return;
+    }
+
+    alert('WATCH REF: ' + el);
+    // tu później zamiast alert zrobimy scrollTo
+  },
+  {
+    // ważne: callback po aktualizacji DOM
+    flush: 'post',
+  },
+);
+
 onMounted(async () => {
-  await nextTick();
-  alert('MOUNT REF: ' + moviesSectionRef.value);
   fetchMovies();
   loadTrendingMovies();
 });
