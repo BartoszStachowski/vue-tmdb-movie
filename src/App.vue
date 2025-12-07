@@ -22,7 +22,7 @@ const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
-const moviesSectionRef = useTemplateRef<HTMLElement | null>('moviesSectionRef');
+const moviesSectionRef = useTemplateRef<HTMLElement>('moviesSectionRef');
 
 const isLoading = ref(false);
 
@@ -64,6 +64,8 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+
+    alert(moviesSectionRef.value);
 
     if (query && moviesSectionRef.value) {
       moviesSectionRef.value?.scrollIntoView(true);
