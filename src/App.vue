@@ -64,13 +64,12 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+    await nextTick();
 
     alert('query: ' + query);
     alert('moviesSectionRef.value: ' + moviesSectionRef.value);
 
     if (query && moviesSectionRef.value) {
-      await nextTick();
-
       setTimeout(() => {
         alert('Movie search completed!');
         alert(moviesSectionRef.value);
