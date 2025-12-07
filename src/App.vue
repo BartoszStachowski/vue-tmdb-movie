@@ -76,29 +76,37 @@ const loadTrendingMovies = async () => {
 };
 
 watch(
-  movies,
-  async (newMovies) => {
-    // jeśli pusta lista – nic nie rób
-    if (!newMovies.length) return;
-
-    // poczekaj, aż DOM się zrenderuje po zmianie `movies`
-    await nextTick();
-
-    const el = moviesSectionRef.value;
-
-    if (!el) {
-      alert('WATCH: ref jest nadal null 😅');
-      return;
-    }
-
-    alert('WATCH REF: ' + el);
-    // tu później zamiast alert zrobimy scrollTo
+  moviesSectionRef,
+  (val) => {
+    alert('REF CHANGE: ' + val);
   },
-  {
-    // ważne: callback po aktualizacji DOM
-    flush: 'post',
-  },
+  { immediate: true },
 );
+
+// watch(
+//   movies,
+//   async (newMovies) => {
+//     // jeśli pusta lista – nic nie rób
+//     if (!newMovies.length) return;
+
+//     // poczekaj, aż DOM się zrenderuje po zmianie `movies`
+//     await nextTick();
+
+//     const el = moviesSectionRef.value;
+
+//     if (!el) {
+//       alert('WATCH: ref jest nadal null 😅');
+//       return;
+//     }
+
+//     alert('WATCH REF: ' + el);
+//     // tu później zamiast alert zrobimy scrollTo
+//   },
+//   {
+//     // ważne: callback po aktualizacji DOM
+//     flush: 'post',
+//   },
+// );
 
 onMounted(async () => {
   fetchMovies();
