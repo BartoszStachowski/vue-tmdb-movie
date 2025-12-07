@@ -56,6 +56,7 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
 
     if (query && firstMovie) {
       await updateSearchCount(query, firstMovie);
+      await scrollToMovies();
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -64,24 +65,21 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
-    alert(moviesSectionRef.value);
-    // await nextTick();
-
-    // alert('query: ' + query);
-    // alert('moviesSectionRef.value: ' + moviesSectionRef.value);
-
-    // if (query && moviesSectionRef.value) {
-    //   setTimeout(() => {
-    //     alert('Movie search completed!');
-    //     alert(moviesSectionRef.value);
-    //     moviesSectionRef.value?.scrollIntoView({
-    //       behavior: 'smooth',
-    //       block: 'start',
-    //       inline: 'start',
-    //     });
-    //   }, 10);
-    // }
   }
+};
+
+const scrollToMovies = async () => {
+  await nextTick();
+
+  if (!moviesSectionRef.value) return;
+
+  setTimeout(() => {
+    moviesSectionRef.value?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'start',
+    });
+  }, 10);
 };
 
 const loadTrendingMovies = async () => {
@@ -93,7 +91,6 @@ const loadTrendingMovies = async () => {
 };
 
 onMounted(async () => {
-  alert(moviesSectionRef.value);
   fetchMovies();
   loadTrendingMovies();
 });
