@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import {
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  useTemplateRef,
+  watch,
+} from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
@@ -22,7 +29,7 @@ const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
-const moviesSectionRef = ref<HTMLElement | null>(null);
+const moviesSectionRef = useTemplateRef<HTMLElement | null>('moviesSectionRef');
 
 const isLoading = ref(false);
 
@@ -56,7 +63,6 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
 
     if (query && firstMovie) {
       await updateSearchCount(query, firstMovie);
-      await scrollToMovies();
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -65,21 +71,8 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+    alert(moviesSectionRef.value);
   }
-};
-
-const scrollToMovies = async () => {
-  await nextTick();
-
-  if (!moviesSectionRef.value) return;
-
-  setTimeout(() => {
-    moviesSectionRef.value?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'start',
-    });
-  }, 10);
 };
 
 const loadTrendingMovies = async () => {
