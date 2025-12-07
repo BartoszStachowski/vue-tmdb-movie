@@ -126,6 +126,7 @@ watch(search, (value: string) => {
 
 onUnmounted(() => {
   if (timeout) clearTimeout(timeout);
+  alert('Component unmounted, timeout cleared.');
 });
 </script>
 
