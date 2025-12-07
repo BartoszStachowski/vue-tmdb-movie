@@ -66,6 +66,9 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     isLoading.value = false;
 
     if (query) {
+      alert(moviesSectionRef.value);
+      // const rect = moviesSectionRef.value.getBoundingClientRect();
+
       setTimeout(() => {
         scrollTo({
           top: 950,
