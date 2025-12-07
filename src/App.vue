@@ -66,8 +66,10 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     isLoading.value = false;
 
     if (query) {
-      alert(moviesSectionRef.value);
       // const rect = moviesSectionRef.value.getBoundingClientRect();
+
+      const el = document.querySelector('#movies-section');
+      alert(el);
 
       setTimeout(() => {
         scrollTo({
@@ -152,7 +154,7 @@ onUnmounted(() => {
       </section>
 
       <!-- ALL MOVIES SECTION -->
-      <section ref="moviesSectionRef" class="space-y-9">
+      <section id="movies-section" ref="moviesSectionRef" class="space-y-9">
         <h2>All Movies</h2>
 
         <BaseSpinner v-if="isLoading" />
