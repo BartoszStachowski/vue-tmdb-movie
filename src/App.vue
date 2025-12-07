@@ -66,14 +66,19 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     isLoading.value = false;
 
     if (query) {
-      const div = moviesSectionRef.value!;
       setTimeout(() => {
-        div.scrollIntoView({
+        scrollTo({
+          top: 950,
           behavior: 'smooth',
-          block: 'start',
-          inline: 'start',
         });
       }, 10);
+      // setTimeout(() => {
+      //   div.scrollIntoView({
+      //     behavior: 'smooth',
+      //     block: 'start',
+      //     inline: 'start',
+      //   });
+      // }, 10);
     }
   }
 };
