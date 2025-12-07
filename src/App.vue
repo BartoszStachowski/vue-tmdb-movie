@@ -66,24 +66,18 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     isLoading.value = false;
 
     if (query) {
-      // const rect = moviesSectionRef.value.getBoundingClientRect();
-
       const el = document.querySelector('#movies-section');
-      alert(el);
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const offsetTop = rect.top + window.scrollY;
 
       setTimeout(() => {
         scrollTo({
-          top: 950,
+          top: offsetTop,
           behavior: 'smooth',
         });
       }, 10);
-      // setTimeout(() => {
-      //   div.scrollIntoView({
-      //     behavior: 'smooth',
-      //     block: 'start',
-      //     inline: 'start',
-      //   });
-      // }, 10);
     }
   }
 };
