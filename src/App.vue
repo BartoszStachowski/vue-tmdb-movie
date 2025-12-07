@@ -64,6 +64,7 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+    alert(moviesSectionRef.value);
     // await nextTick();
 
     // alert('query: ' + query);
