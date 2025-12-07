@@ -68,10 +68,13 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     if (query && moviesSectionRef.value) {
       await nextTick();
 
-      moviesSectionRef.value?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
+      setTimeout(() => {
+        moviesSectionRef.value?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'start',
+        });
+      }, 10);
     }
   }
 };
