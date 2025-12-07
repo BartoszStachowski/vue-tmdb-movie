@@ -29,7 +29,7 @@ const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
-const moviesSectionRef = useTemplateRef<HTMLElement | null>('moviesSectionRef');
+const moviesSectionRef = ref<HTMLElement | null>(null);
 
 const isLoading = ref(false);
 
