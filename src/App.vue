@@ -68,19 +68,15 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     if (query && moviesSectionRef.value) {
       await nextTick();
 
-      // Daj przeglądarce jedną klatkę na ułożenie layoutu
-      requestAnimationFrame(() => {
-        const el = moviesSectionRef.value;
-        if (!el) return;
-
-        const rect = el.getBoundingClientRect();
-        const offsetTop = rect.top + window.scrollY; // punkt względem całej strony
-
-        window.scrollTo({
-          top: offsetTop - 16, // mały margines od góry, możesz zmienić / usunąć
+      setTimeout(() => {
+        alert('Movie search completed!');
+        alert(moviesSectionRef.value);
+        moviesSectionRef.value?.scrollIntoView({
           behavior: 'smooth',
+          block: 'start',
+          inline: 'start',
         });
-      });
+      }, 10);
     }
   }
 };
