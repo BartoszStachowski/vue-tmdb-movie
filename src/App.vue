@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  nextTick,
-  onMounted,
-  onUnmounted,
-  ref,
-  useTemplateRef,
-  watch,
-} from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
@@ -71,6 +64,7 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+    await nextTick();
     alert(moviesSectionRef.value);
   }
 };
