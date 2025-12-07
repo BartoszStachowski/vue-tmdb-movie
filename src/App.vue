@@ -67,9 +67,14 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
 
     if (query && moviesSectionRef.value) {
       await nextTick();
-      moviesSectionRef.value.scrollIntoView({
+
+      const el = moviesSectionRef.value;
+      const rect = el.getBoundingClientRect();
+      const offsetTop = rect.top + window.scrollY;
+
+      window.scrollTo({
+        top: offsetTop,
         behavior: 'smooth',
-        block: 'start',
       });
     }
   }
