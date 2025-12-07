@@ -70,6 +70,7 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
 
       const active = document.activeElement as HTMLElement | null;
       if (active && typeof active.blur === 'function') {
+        window.alert('alert');
         active.blur();
       }
 
