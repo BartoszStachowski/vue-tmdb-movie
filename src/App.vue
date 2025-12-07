@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
 
@@ -22,7 +22,7 @@ const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
-const moviesSectionRef = ref<HTMLElement | null>(null);
+const moviesSectionRef = useTemplateRef<HTMLElement | null>('moviesSectionRef');
 
 const isLoading = ref(false);
 
@@ -64,6 +64,10 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     }
   } finally {
     isLoading.value = false;
+
+    if (query && moviesSectionRef.value) {
+      moviesSectionRef.value?.scrollIntoView(true);
+    }
   }
 };
 
@@ -74,28 +78,6 @@ const loadTrendingMovies = async () => {
     console.error(`Error fetching trending movies: ${error}`);
   }
 };
-
-const scrollToMovies = async () => {
-  await nextTick();
-
-  setTimeout(() => {
-    const el = moviesSectionRef.value;
-    if (!el) return;
-
-    const rect = el.getBoundingClientRect();
-    const offsetTop = rect.top + window.scrollY;
-
-    window.scrollTo({
-      top: offsetTop,
-      behavior: 'smooth',
-    });
-  }, 0);
-};
-
-watch(movies, async (newMovies) => {
-  if (!newMovies.length) return;
-  scrollToMovies();
-});
 
 onMounted(async () => {
   fetchMovies();
@@ -115,7 +97,6 @@ watch(search, (value: string) => {
 
 onUnmounted(() => {
   if (timeout) clearTimeout(timeout);
-  alert('Component unmounted, timeout cleared.');
 });
 </script>
 
