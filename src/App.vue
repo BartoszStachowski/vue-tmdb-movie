@@ -65,7 +65,7 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
   } finally {
     isLoading.value = false;
     await nextTick();
-    alert(moviesSectionRef.value);
+    // alert(moviesSectionRef.value);
   }
 };
 
@@ -78,6 +78,8 @@ const loadTrendingMovies = async () => {
 };
 
 onMounted(async () => {
+  await nextTick();
+  alert('MOUNT REF: ' + moviesSectionRef.value);
   fetchMovies();
   loadTrendingMovies();
 });
