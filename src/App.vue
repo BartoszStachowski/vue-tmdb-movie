@@ -68,27 +68,10 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     if (query && moviesSectionRef.value) {
       await nextTick();
 
-      const active = document.activeElement as HTMLElement | null;
-      if (active && typeof active.blur === 'function') {
-        window.alert('alert');
-        active.blur();
-      }
-
-      // const el = moviesSectionRef.value;
-      // const rect = el.getBoundingClientRect();
-      // const offsetTop = rect.top + window.scrollY;
-
-      setTimeout(() => {
-        moviesSectionRef.value?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }, 100);
-
-      // window.scrollTo({
-      //   top: offsetTop,
-      //   behavior: 'smooth',
-      // });
+      moviesSectionRef.value?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }
   }
 };
