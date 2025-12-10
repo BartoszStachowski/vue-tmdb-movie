@@ -82,22 +82,36 @@ onUnmounted(() => {
         @click="model = false"
       />
 
-      <!-- MODAL -->
-      <div
-        ref="modalRef"
-        class="top-1/2 left-1/2 z-50 fixed bg-amber-200 p-4 rounded-lg w-72 -translate-x-1/2 -translate-y-1/2"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="movie-dialog-title"
-        tabindex="-1"
-      >
-        <h2 id="movie-dialog-title">{{ title }}</h2>
-        <slot />
-        <button>Hello button</button>
-        <button class="bg-red-200 px-3 py-4" @click="model = false">
-          Close
-        </button>
-      </div>
+      <Transition name="modal" appear>
+        <!-- MODAL -->
+        <div
+          ref="modalRef"
+          class="top-1/2 left-1/2 z-50 fixed bg-amber-200 p-4 rounded-lg w-72 -translate-x-1/2 -translate-y-1/2"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="movie-dialog-title"
+          tabindex="-1"
+        >
+          <h2 id="movie-dialog-title">{{ title }}</h2>
+          <slot />
+          <button>Hello button</button>
+          <button class="bg-red-200 px-3 py-4" @click="model = false">
+            Close
+          </button>
+        </div>
+      </Transition>
     </div>
   </Teleport>
 </template>
+
+<style>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+</style>
