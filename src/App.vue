@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import BaseSearch from '@/components/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
+import BaseModal from '@/components/BaseModal.vue';
 
 import type { Movie, MovieResponse, TrendingRow } from '@/types/movie';
 import BaseSpinner from '@/components/BaseSpinner.vue';
@@ -23,6 +24,7 @@ const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
 const moviesSectionRef = ref<HTMLElement | null>(null);
+const isModalOpen = ref(false);
 
 const isLoading = ref(false);
 
@@ -66,20 +68,24 @@ const fetchMovies = async (query: string = ''): Promise<void> => {
     isLoading.value = false;
 
     if (query) {
-      const el = document.querySelector('#movies-section');
-      if (!el) return;
-
-      const rect = el.getBoundingClientRect();
-      const offsetTop = rect.top + window.scrollY;
-
-      setTimeout(() => {
-        scrollTo({
-          top: offsetTop,
-          behavior: 'smooth',
-        });
-      }, 10);
+      scrollToAllMovies();
     }
   }
+};
+
+const scrollToAllMovies = () => {
+  const el = document.querySelector('#movies-section');
+  if (!el) return;
+
+  const rect = el.getBoundingClientRect();
+  const offsetTop = rect.top + window.scrollY;
+
+  setTimeout(() => {
+    scrollTo({
+      top: offsetTop,
+      behavior: 'smooth',
+    });
+  }, 10);
 };
 
 const loadTrendingMovies = async () => {
@@ -123,6 +129,15 @@ onUnmounted(() => {
         </h1>
         <BaseSearch v-model="search" />
       </header>
+
+      <BaseModal
+        v-if="isModalOpen"
+        v-model:open="isModalOpen"
+        title="My Dialog Title"
+      >
+        My Dialog Content
+      </BaseModal>
+      <button @click="isModalOpen = true">Open Modal</button>
 
       <section class="mt-20">
         <h2>Trending Movies</h2>

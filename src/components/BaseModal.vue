@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
 interface Props {
   title?: string;
@@ -11,34 +11,72 @@ defineProps<Props>();
 const model = defineModel<boolean>('open');
 
 const modalRef = ref<HTMLElement | null>(null);
+const previouslyFocusedElement = ref<HTMLElement | null>(null);
 
-// focus trap
-const handleKeydown = (event: KeyboardEvent) => {
-  if (!model.value) return;
+const FOCUSABLE_SELECTOR =
+  'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
+const getFocusableElements = (): HTMLElement[] => {
+  if (!modalRef.value) return [];
+  return Array.from(
+    modalRef.value.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
+  );
 };
 
-watch(model, async (newVal) => {
-  if (newVal) {
-    document.body.style.overflow = 'hidden';
-    document.addEventListener('keydown', handleKeydown);
+// focus trap and escape key handling
+const handleKeydown = (event: KeyboardEvent) => {
+  if (!model.value) return;
 
-    await nextTick();
+  const elements = getFocusableElements();
+  const firstElement = elements[0];
+  const lastElement = elements[elements.length - 1];
 
-    modalRef.value?.focus();
-  } else {
-    document.body.style.overflow = '';
-    document.removeEventListener('keydown', handleKeydown);
+  if (event.key === 'Escape') {
+    model.value = false;
+    return;
   }
+
+  if (event.key === 'Tab') {
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement?.focus();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement?.focus();
+      }
+    }
+  }
+};
+
+onMounted(async () => {
+  // save previously focused element
+  previouslyFocusedElement.value =
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+  modalRef.value?.focus();
+
+  // disable background scroll
+  document.body.style.overflow = 'hidden';
+  document.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
+  // enable background scroll
+  document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
+
+  // restore focus
+  previouslyFocusedElement.value?.focus();
 });
 </script>
 
 <template>
   <Teleport to="body">
-    <div v-if="model">
+    <div>
       <!-- BACKGROUND -->
       <div
         class="z-40 fixed inset-0 bg-black/50 backdrop-blur-sm"
