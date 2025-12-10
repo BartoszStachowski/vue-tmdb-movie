@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
+import { useScrollLock } from '@/composables/useScrollLock';
 
 interface Props {
   title?: string;
@@ -22,6 +23,8 @@ const getFocusableElements = (): HTMLElement[] => {
     modalRef.value.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
   );
 };
+
+useScrollLock();
 
 // focus trap and escape key handling
 const handleKeydown = (event: KeyboardEvent) => {
@@ -59,14 +62,10 @@ onMounted(async () => {
       : null;
   modalRef.value?.focus();
 
-  // disable background scroll
-  document.body.style.overflow = 'hidden';
   document.addEventListener('keydown', handleKeydown);
 });
 
 onUnmounted(() => {
-  // enable background scroll
-  document.body.style.overflow = '';
   document.removeEventListener('keydown', handleKeydown);
 
   // restore focus
