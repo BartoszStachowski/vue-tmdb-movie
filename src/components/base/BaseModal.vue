@@ -86,7 +86,7 @@ onUnmounted(() => {
         <!-- MODAL -->
         <div
           ref="modalRef"
-          class="top-1/2 left-1/2 z-50 fixed bg-amber-200 p-4 rounded-lg w-72 -translate-x-1/2 -translate-y-1/2"
+          class="top-1/2 left-1/2 z-50 fixed bg-amber-200 p-4 rounded-lg w-[90%] xs:w-[80%] sm:w-md -translate-x-1/2 -translate-y-1/2"
           role="dialog"
           aria-modal="true"
           aria-labelledby="movie-dialog-title"
