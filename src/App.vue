@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watch } from 'vue';
-import BaseSearch from '@/components/BaseSearch.vue';
+import BaseSearch from '@/components/base/BaseSearch.vue';
 import MovieCard from '@/components/MovieCard.vue';
-import BaseModal from '@/components/BaseModal.vue';
+import BaseModal from '@/components/base/BaseModal.vue';
+import MovieDetails from '@/components/MovieDetails.vue';
 
 import type { Movie, MovieResponse, TrendingRow } from '@/types/movie';
-import BaseSpinner from '@/components/BaseSpinner.vue';
+import BaseSpinner from '@/components/base/BaseSpinner.vue';
 import { getTrendingMovies, updateSearchCount } from '@/services/movie';
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -23,8 +24,8 @@ const search = ref('');
 const errorMessage = ref('');
 const movies = ref<Movie[]>([]);
 const trendingMovies = ref<TrendingRow[]>([]);
-const moviesSectionRef = ref<HTMLElement | null>(null);
 const isModalOpen = ref(false);
+const selectedMovieId = ref<number | null>(null);
 
 const isLoading = ref(false);
 
@@ -96,6 +97,11 @@ const loadTrendingMovies = async () => {
   }
 };
 
+const showMovieDatails = (movieId: number) => {
+  selectedMovieId.value = movieId;
+  isModalOpen.value = true;
+};
+
 onMounted(async () => {
   fetchMovies();
   loadTrendingMovies();
@@ -130,12 +136,8 @@ onUnmounted(() => {
         <BaseSearch v-model="search" />
       </header>
 
-      <BaseModal
-        v-if="isModalOpen"
-        v-model:open="isModalOpen"
-        title="My Dialog Title"
-      >
-        My Dialog Content
+      <BaseModal v-if="isModalOpen" v-model:open="isModalOpen">
+        <MovieDetails v-if="selectedMovieId" :id="selectedMovieId" />
       </BaseModal>
       <button @click="isModalOpen = true">Open Modal</button>
 
@@ -163,7 +165,7 @@ onUnmounted(() => {
       </section>
 
       <!-- ALL MOVIES SECTION -->
-      <section id="movies-section" ref="moviesSectionRef" class="space-y-9">
+      <section id="movies-section" class="space-y-9">
         <h2>All Movies</h2>
 
         <BaseSpinner v-if="isLoading" />
@@ -173,7 +175,13 @@ onUnmounted(() => {
           class="gap-5 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <li v-for="movie in movies" :key="movie.id">
-            <MovieCard :movie />
+            <button class="cursor-pointer">
+              <MovieCard
+                :movie="movie"
+                class="hover:bg-secondary-2"
+                @click="showMovieDatails(movie.id)"
+              />
+            </button>
           </li>
         </ul>
       </section>
