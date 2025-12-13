@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mount } from '@vue/test-utils';
-import BaseSearch from '../BaseSearch.vue';
+import BaseSearch from '../base/BaseSearch.vue';
 
 describe('BaseSearch Component', () => {
   const wrapper = mount(BaseSearch, {
