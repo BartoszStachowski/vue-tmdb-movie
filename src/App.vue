@@ -175,12 +175,8 @@ onUnmounted(() => {
           class="gap-5 grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
           <li v-for="movie in movies" :key="movie.id">
-            <button class="cursor-pointer">
-              <MovieCard
-                :movie="movie"
-                class="hover:bg-secondary-2"
-                @click="showMovieDatails(movie.id)"
-              />
+            <button class="cursor-pointer" @click="showMovieDatails(movie.id)">
+              <MovieCard :movie="movie" class="hover:bg-secondary-2" />
             </button>
           </li>
         </ul>

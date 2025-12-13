@@ -56,6 +56,7 @@ fetchDetails(props.id);
     class="bg-neutral-950 rounded-2xl ring-1 ring-white/10 w-full max-w-4xl overflow-hidden text-neutral-100"
   >
     <div class="relative">
+      <!-- background -->
       <div class="w-full h-44 sm:h-56 md:h-64">
         <img
           :src="`https://image.tmdb.org/t/p/w500/${movieDetails.backdrop_path}`"
@@ -66,6 +67,8 @@ fetchDetails(props.id);
       <div
         class="absolute inset-0 bg-linear-to-t from-neutral-950 via-neutral-950/40 to-transparent"
       ></div>
+
+      <!-- poster + title -->
     </div>
   </div>
   <p v-else class="text-red-500">{{ errorMessage }}</p>

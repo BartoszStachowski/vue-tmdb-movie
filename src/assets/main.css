@@ -51,6 +51,10 @@
   .wrapper {
     @apply z-10 relative flex flex-col mx-auto xs:p-10 px-5 py-12 max-w-7xl;
   }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
 }
 
 @utility text-gradient {

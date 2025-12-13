@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
 import { useScrollLock } from '@/composables/useScrollLock';
+import CloseIcon from '@/assets/icons/close.svg';
 
 interface Props {
   title?: string;
@@ -86,18 +87,25 @@ onUnmounted(() => {
         <!-- MODAL -->
         <div
           ref="modalRef"
-          class="top-1/2 left-1/2 z-50 fixed bg-amber-200 p-4 rounded-lg w-[90%] xs:w-[80%] sm:w-md -translate-x-1/2 -translate-y-1/2"
+          class="top-1/2 left-1/2 z-50 fixed bg-primary-1 p-4 rounded-lg w-[90%] xs:w-[80%] sm:w-md -translate-x-1/2 -translate-y-1/2"
           role="dialog"
           aria-modal="true"
           aria-labelledby="movie-dialog-title"
           tabindex="-1"
         >
+          <button
+            class="top-0 right-0 z-60 absolute flex-center bg-secondary-3 hover:bg-secondary-2 rounded-md w-10 h-10 cursor-pointer"
+            @click="model = false"
+          >
+            <img
+              :src="CloseIcon"
+              alt="Close modal"
+              class="w-5 h-5 cursor-pointer"
+            />
+          </button>
           <h2 id="movie-dialog-title">{{ title }}</h2>
           <slot />
           <button>Hello button</button>
-          <button class="bg-red-200 px-3 py-4" @click="model = false">
-            Close
-          </button>
         </div>
       </Transition>
     </div>
